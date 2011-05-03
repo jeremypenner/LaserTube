@@ -16,30 +16,35 @@ package
 		public function ClickArea(rgpoint: Array, color:uint, alpha:Number = 1)
 		{
 			super();
-			shape = MakeShape(rgpoint, color, alpha);
-			shapeHidden = MakeShape(rgpoint, color, 0);
+			shape = drawShape(new Shape(), rgpoint, color, null, alpha);
+			shapeHidden = drawShape(new Shape(), rgpoint, color, null, 0);
 			fHidden = false;
 			addChild(shape);
 		}
-		private function MakeShape(rgpoint:Array, color:uint, alpha:Number):Shape
+		public static function drawShape(shape:Shape, rgpoint:Array, color:uint, colorLine:* = null, alpha:Number = 1):Shape
 		{
-			var shape:Shape = new Shape();
-			shape.graphics.beginFill(color, alpha);
-			var fFirstPoint:Boolean = true;
-			for each (var point:Point in rgpoint)
+			shape.graphics.clear();
+			if (rgpoint.length > 0)
 			{
-				if (fFirstPoint)
+				if (colorLine != null)
+					shape.graphics.lineStyle(1, colorLine);
+				shape.graphics.beginFill(color, alpha);
+				var fFirstPoint:Boolean = true;
+				for each (var point:Point in rgpoint)
 				{
-					shape.graphics.moveTo(point.x, point.y);
-					fFirstPoint = false;
+					if (fFirstPoint)
+					{
+						shape.graphics.moveTo(point.x, point.y);
+						fFirstPoint = false;
+					}
+					else
+					{
+						shape.graphics.lineTo(point.x, point.y);
+					}
 				}
-				else
-				{
-					shape.graphics.lineTo(point.x, point.y);
-				}
+				shape.graphics.lineTo(rgpoint[0].x, rgpoint[0].y);
+				shape.graphics.endFill();
 			}
-			shape.graphics.lineTo(rgpoint[0].x, rgpoint[0].y);
-			shape.graphics.endFill();
 			return shape;
 		}
 		public function Show():void
