@@ -16,6 +16,10 @@ package
 		private var shape: Shape;
 		private var shapeLine: Shape;
 		private var msClickLast: int;
+		
+		public static const DRAW_BEGIN:String = "draw-begin";
+		public static const DRAW_END:String = "draw-end";
+		
 		public function SketchShape() 
 		{
 			super();
@@ -28,6 +32,7 @@ package
 		}
 		private function init(e: Event):void
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
 			stage.doubleClickEnabled = true;
 			stage.addEventListener(MouseEvent.CLICK, onClick);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMove);
@@ -48,7 +53,7 @@ package
 			var dmsClick:int = msClickNow - msClickLast;
 			if (dmsClick < 200)
 			{
-				dispatchEvent(new Event(Event.COMPLETE));
+				dispatchEvent(new Event(DRAW_END));
 				clear();
 			}
 			else
@@ -57,6 +62,7 @@ package
 				{
 					shapeLine = new Shape();
 					addChild(shapeLine);
+					dispatchEvent(new Event(DRAW_BEGIN));
 				}
 				rgpoint.push(new Point(e.stageX, e.stageY));
 				redrawShape();
