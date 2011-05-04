@@ -12,10 +12,12 @@ package
 	public class Videotube extends Sprite
 	{
 		private var flv:Video;
+		private var gamedisc:Gamedisc;
 		public var stream:NetStream;
-		public function Videotube()
+		public function Videotube(gamedisc:Gamedisc)
 		{
 			super();
+			this.gamedisc = gamedisc;
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		private function init(e: Event):void 
