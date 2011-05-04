@@ -18,6 +18,10 @@ package
 		{
 			rgqte.splice(Math.abs(Util.binarySearch(rgqte, qte, Qte.compare)), 0, qte);
 		}
+		public function CreateVideotube():Videotube
+		{
+			return new VideotubeFlv(this);
+		}
 		public function ToJson():Object
 		{
 			var jsonRgqte:Array = [];

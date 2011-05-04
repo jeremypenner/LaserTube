@@ -44,12 +44,12 @@ package
 		}
 		private function onDrawBegin(e: Event): void
 		{
-			videotube.stream.pause();
+			videotube.pause();
 		}
 		private function onDrawEnd(e: Event): void
 		{
-			gamedisc.AddQte(new Qte(sketchShape.rgpoint, videotube.stream.time));
-			videotube.stream.resume();
+			gamedisc.AddQte(new Qte(sketchShape.rgpoint, videotube.time()));
+			videotube.resume();
 		}
 
 	}

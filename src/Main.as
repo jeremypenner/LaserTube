@@ -21,7 +21,7 @@ package
 		public function Main():void 
 		{
 			gamedisc = new Gamedisc("The Last Eichhof - Longplay.flv");
-			videotube = new Videotube(gamedisc);
+			videotube = gamedisc.CreateVideotube();
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
@@ -56,7 +56,7 @@ package
 				gameplayer = new GamePlayer(videotube, gamedisc);
 				addChild(gameplayer);
 			}
-			videotube.stream.seek(0);
+			videotube.seek(0);
 		}
 		private function onKey(key:KeyboardEvent):void
 		{
