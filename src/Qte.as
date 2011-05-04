@@ -38,5 +38,4 @@ package
 			secTrigger = json.secTrigger;
 		}
 	}
-
 }
