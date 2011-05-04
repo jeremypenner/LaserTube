@@ -14,15 +14,21 @@ package
 		private var flv:Video;
 		private var gamedisc:Gamedisc;
 		public var stream:NetStream;
+		private var iqte:int;
+		private var secPrev:Number;
 		public function Videotube(gamedisc:Gamedisc)
 		{
 			super();
 			this.gamedisc = gamedisc;
+			iqte = 0;
+			secPrev = 0;
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		private function init(e: Event):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
+			addEventListener(Event.REMOVED_FROM_STAGE, cleanup);
+			
 			flv = new Video(stage.stageWidth, stage.stageHeight);
 			addChild(flv);
 			var conn:NetConnection = new NetConnection();
@@ -30,6 +36,39 @@ package
 			stream = new NetStream(conn);
 			stream.client = new Object();
 			flv.attachNetStream(stream);
+			
+			stage.addEventListener(Event.ENTER_FRAME, tick);
 		}
+		private function cleanup(e: Event):void
+		{
+			removeEventListener(Event.REMOVED_FROM_STAGE, cleanup);
+			stage.removeEventListener(Event.ENTER_FRAME, tick);
+		}
+		private function tick(e: Event):void
+		{
+			var secNow:Number = stream.time;
+			if (secNow > secPrev && secPrev >= 0)
+			{
+				while(iqte < gamedisc.rgqte.length)
+				{
+					var qte:Qte = gamedisc.rgqte[iqte];
+					if (qte.secTrigger > secNow)
+						break;
+					if (qte.secTrigger > secPrev)
+						dispatchEvent(new EventQte(qte));
+					iqte ++;
+				}
+			}
+			else
+			{
+				iqte = 0;
+			}
+			secPrev = secNow;
+		}
+		public function play():void
+		{
+			stream.play(gamedisc.urlVideo);
+		}
+		
 	}
 }
