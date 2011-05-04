@@ -33,9 +33,15 @@ package
 		private function init(e: Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			stage.doubleClickEnabled = true;
+			addEventListener(Event.REMOVED_FROM_STAGE, cleanup);
 			stage.addEventListener(MouseEvent.CLICK, onClick);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMove);
+		}
+		private function cleanup(e: Event):void
+		{
+			removeEventListener(Event.REMOVED_FROM_STAGE, cleanup);
+			stage.removeEventListener(MouseEvent.CLICK, onClick);
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMove);
 		}
 		public function clear():void
 		{
@@ -76,13 +82,13 @@ package
 		}
 		private function redrawShape():void
 		{
-			ClickArea.drawShape(shape, rgpoint, 0x555555, 0x000000, 0.1);
+			ClickArea.drawShape(shape, rgpoint, 0x555555, 0xb8860b, 0.1);
 		}
 		private function redrawLine(ptEnd:Point):void
 		{
 			var ptStart:Point = rgpoint[rgpoint.length - 1];
 			shapeLine.graphics.clear();
-			shapeLine.graphics.lineStyle(1);
+			shapeLine.graphics.lineStyle(1, 0xb8860b);
 			shapeLine.graphics.moveTo(ptStart.x, ptStart.y);
 			shapeLine.graphics.lineTo(ptEnd.x, ptEnd.y);
 		}
