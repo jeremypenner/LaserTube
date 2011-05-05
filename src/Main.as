@@ -20,7 +20,8 @@ package
 		
 		public function Main():void 
 		{
-			gamedisc = new Gamedisc("The Last Eichhof - Longplay.flv");
+			//gamedisc = new Gamedisc("The Last Eichhof - Longplay.flv", Gamedisc.VIDEOTUBE_FLV);
+			gamedisc = new Gamedisc("EdzLFNELeCI", Gamedisc.VIDEOTUBE_YOUTUBE);
 			videotube = gamedisc.CreateVideotube();
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
@@ -31,9 +32,11 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
 			addChild(videotube);
-			toggleGame();
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKey);
-			videotube.play();
+			if (videotube.fready())
+				onVideotubeReady();
+			else
+				videotube.addEventListener(Videotube.READY, onVideotubeReady);
 		}
 		private function toggleGame():void
 		{
@@ -57,6 +60,11 @@ package
 				addChild(gameplayer);
 			}
 			videotube.seek(0);
+		}
+		private function onVideotubeReady(event:Event = null):void
+		{
+			toggleGame();
+			videotube.play();
 		}
 		private function onKey(key:KeyboardEvent):void
 		{

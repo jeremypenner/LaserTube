@@ -7,11 +7,16 @@ package
 	 */
 	public class Gamedisc
 	{
+		public static const VIDEOTUBE_FLV:String = "flv";
+		public static const VIDEOTUBE_YOUTUBE:String = "yt";
+		
 		public var urlVideo:String;
+		public var typeVideotube:String;
 		public var rgqte:Array;
-		public function Gamedisc(urlVideo:String) 
+		public function Gamedisc(urlVideo:String, typeVideotube:String) 
 		{
 			this.urlVideo = urlVideo;
+			this.typeVideotube = typeVideotube;
 			this.rgqte = [];
 		}
 		public function AddQte(qte:Qte):void
@@ -20,14 +25,18 @@ package
 		}
 		public function CreateVideotube():Videotube
 		{
-			return new VideotubeFlv(this);
+			if (typeVideotube == VIDEOTUBE_FLV)
+				return new VideotubeFlv(this);
+			if (typeVideotube == VIDEOTUBE_YOUTUBE)
+				return new VideotubeYt(this);
+			throw "invalid videotube type";
 		}
 		public function ToJson():Object
 		{
 			var jsonRgqte:Array = [];
 			for each (var qte:Qte in rgqte)
 				jsonRgqte.push(qte.ToJson());
-			return { urlVideo: urlVideo, rgqte: jsonRgqte };
+			return { urlVideo: urlVideo, typeVideotube: typeVideotube, rgqte: jsonRgqte };
 		}
 		public function FromJson(json:Object):void
 		{
@@ -39,6 +48,7 @@ package
 				rgqte.push(qte);
 			}
 			urlVideo = json.urlVideo;
+			typeVideotube = json.typeVideotube;
 		}
 	}
 

@@ -34,14 +34,20 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			addEventListener(Event.REMOVED_FROM_STAGE, cleanup);
-			stage.addEventListener(MouseEvent.CLICK, onClick);
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMove);
+			
+			var shapeClick:Shape = new Shape();
+			shapeClick.graphics.beginFill(0x0000ff, 0);
+			shapeClick.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+			addChildAt(shapeClick, 0);
+			
+			addEventListener(MouseEvent.CLICK, onClick);
+			addEventListener(MouseEvent.MOUSE_MOVE, onMove);
 		}
 		private function cleanup(e: Event):void
 		{
 			removeEventListener(Event.REMOVED_FROM_STAGE, cleanup);
-			stage.removeEventListener(MouseEvent.CLICK, onClick);
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMove);
+			removeEventListener(MouseEvent.CLICK, onClick);
+			removeEventListener(MouseEvent.MOUSE_MOVE, onMove);
 		}
 		public function clear():void
 		{

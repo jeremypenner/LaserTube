@@ -1,5 +1,6 @@
 package  
 {
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -24,13 +25,14 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			addEventListener(Event.REMOVED_FROM_STAGE, cleanup);
-			stage.addEventListener(MouseEvent.CLICK, onClick);
+			
+			addEventListener(MouseEvent.CLICK, onClick);
 			videotube.addEventListener(EventQte.QTE, onQte);
 		}
 		private function cleanup(e:Event):void
 		{
 			removeEventListener(Event.REMOVED_FROM_STAGE, cleanup);
-			stage.removeEventListener(MouseEvent.CLICK, onClick);
+			removeEventListener(MouseEvent.CLICK, onClick);
 			videotube.removeEventListener(EventQte.QTE, onQte);
 		}
 		private function onQte(e:EventQte):void
