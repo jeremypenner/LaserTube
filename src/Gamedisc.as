@@ -13,7 +13,7 @@ package
 		public var urlVideo:String;
 		public var typeVideotube:String;
 		public var rgqte:Array;
-		public function Gamedisc(urlVideo:String, typeVideotube:String) 
+		public function Gamedisc(urlVideo:String = null, typeVideotube:String = null) 
 		{
 			this.urlVideo = urlVideo;
 			this.typeVideotube = typeVideotube;

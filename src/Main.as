@@ -1,9 +1,11 @@
 package 
 {
+	import com.adobe.serialization.json.JSON;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	
@@ -17,12 +19,14 @@ package
 		private var gamedisc:Gamedisc;
 		private var gameeditor:GameEditor;
 		private var gameplayer:GamePlayer;
+		private var fPlayOnly:Boolean;
 		
 		public function Main():void 
 		{
-			//gamedisc = new Gamedisc("The Last Eichhof - Longplay.flv", Gamedisc.VIDEOTUBE_FLV);
-			gamedisc = new Gamedisc("EdzLFNELeCI", Gamedisc.VIDEOTUBE_YOUTUBE);
+			gamedisc = new Gamedisc();
+			gamedisc.FromJson(JSON.decode(loaderInfo.parameters.jsonDisc));
 			videotube = gamedisc.CreateVideotube();
+			fPlayOnly = JSON.decode(loaderInfo.parameters.fPlay);
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
