@@ -19,14 +19,12 @@ package
 		private var gamedisc:Gamedisc;
 		private var gameeditor:GameEditor;
 		private var gameplayer:GamePlayer;
-		private var fPlayOnly:Boolean;
 		
 		public function Main():void 
 		{
 			gamedisc = new Gamedisc();
 			gamedisc.FromJson(JSON.decode(loaderInfo.parameters.jsonDisc));
 			videotube = gamedisc.CreateVideotube();
-			fPlayOnly = JSON.decode(loaderInfo.parameters.fPlay);
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}

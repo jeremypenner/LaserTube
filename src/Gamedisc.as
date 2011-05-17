@@ -1,6 +1,11 @@
 package  
 {
+	import com.adobe.serialization.json.JSON;
 	import flash.events.EventDispatcher;
+	import flash.net.sendToURL;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	/**
 	 * ...
 	 * @author jjp
@@ -11,6 +16,7 @@ package
 		public static const VIDEOTUBE_YOUTUBE:String = "yt";
 		
 		public var urlVideo:String;
+		public var urlPostQte:String;
 		public var typeVideotube:String;
 		public var rgqte:Array;
 		public function Gamedisc(urlVideo:String = null, typeVideotube:String = null) 
@@ -22,6 +28,15 @@ package
 		public function AddQte(qte:Qte):void
 		{
 			rgqte.splice(Math.abs(Util.binarySearch(rgqte, qte, Qte.compare)), 0, qte);
+			if (urlPostQte != null)
+			{
+				var req:URLRequest = new URLRequest(urlPostQte);
+				req.method = URLRequestMethod.POST;
+				var data:URLVariables = new URLVariables();
+				data.qte = JSON.encode(qte.ToJson());
+				req.data = data;
+				sendToURL(req);
+			}
 		}
 		public function CreateVideotube():Videotube
 		{
@@ -36,7 +51,10 @@ package
 			var jsonRgqte:Array = [];
 			for each (var qte:Qte in rgqte)
 				jsonRgqte.push(qte.ToJson());
-			return { urlVideo: urlVideo, typeVideotube: typeVideotube, rgqte: jsonRgqte };
+			var json:Object = { urlVideo: urlVideo, typeVideotube: typeVideotube, rgqte: jsonRgqte };
+			if (urlPostQte != null)
+				json.urlPostQte = urlPostQte;
+			return json;
 		}
 		public function FromJson(json:Object):void
 		{
@@ -49,6 +67,7 @@ package
 			}
 			urlVideo = json.urlVideo;
 			typeVideotube = json.typeVideotube;
+			urlPostQte = json.urlPostQte;
 		}
 	}
 
