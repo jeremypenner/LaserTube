@@ -23,7 +23,7 @@ package
 		public function Main():void 
 		{
 			gamedisc = new Gamedisc();
-			gamedisc.FromJson(JSON.decode(loaderInfo.parameters.jsonDisc));
+			gamedisc.FromJson(JSON.decode(loaderInfo.parameters.jsonDisc), JSON.decode(loaderInfo.parameters.jsonPostHeaders));
 			videotube = gamedisc.CreateVideotube();
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
@@ -66,11 +66,13 @@ package
 		private function onVideotubeReady(event:Event = null):void
 		{
 			toggleGame();
+			if (gamedisc.urlPostQte == null)
+				toggleGame();
 			videotube.play();
 		}
 		private function onKey(key:KeyboardEvent):void
 		{
-			if (key.keyCode == Keyboard.SPACE)
+			if (key.keyCode == Keyboard.SPACE && gamedisc.urlPostQte != null)
 				toggleGame();
 		}
 	}

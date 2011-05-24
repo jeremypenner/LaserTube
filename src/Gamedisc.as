@@ -4,6 +4,7 @@ package
 	import flash.events.EventDispatcher;
 	import flash.net.sendToURL;
 	import flash.net.URLRequest;
+	import flash.net.URLRequestHeader;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	/**
@@ -17,6 +18,7 @@ package
 		
 		public var urlVideo:String;
 		public var urlPostQte:String;
+		public var headerPostQte:Object;
 		public var typeVideotube:String;
 		public var rgqte:Array;
 		public function Gamedisc(urlVideo:String = null, typeVideotube:String = null) 
@@ -32,6 +34,8 @@ package
 			{
 				var req:URLRequest = new URLRequest(urlPostQte);
 				req.method = URLRequestMethod.POST;
+				for (var key:String in headerPostQte)
+					req.requestHeaders.push(new URLRequestHeader(key, headerPostQte[key]));
 				var data:URLVariables = new URLVariables();
 				data.qte = JSON.encode(qte.ToJson());
 				req.data = data;
@@ -56,7 +60,7 @@ package
 				json.urlPostQte = urlPostQte;
 			return json;
 		}
-		public function FromJson(json:Object):void
+		public function FromJson(json:Object, jsonPostHeaders:Object):void
 		{
 			rgqte = [];
 			for each (var jsonQte:Object in json.rgqte)
@@ -68,6 +72,7 @@ package
 			urlVideo = json.urlVideo;
 			typeVideotube = json.typeVideotube;
 			urlPostQte = json.urlPostQte;
+			headerPostQte = jsonPostHeaders;
 		}
 	}
 

@@ -1,5 +1,7 @@
 package  
 {
+	import com.adobe.serialization.json.JSON;
+	import flash.external.ExternalInterface;
 	/**
 	 * ...
 	 * @author jjp
@@ -22,6 +24,10 @@ package
 					imax = imid - 1;
 			}
 			return -imin;
+		}
+		public static function alert(...rgo:*):void
+		{
+			ExternalInterface.call("alert", JSON.encode(rgo));
 		}
 	}
 
