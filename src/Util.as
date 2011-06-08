@@ -25,6 +25,10 @@ package
 			}
 			return -imin;
 		}
+		public static function FInTimespan(sec:Number, secPrev:Number, secNow:Number):Boolean
+		{
+			return (sec <= secNow) && (sec > secPrev);
+		}
 		public static function alert(...rgo:*):void
 		{
 			ExternalInterface.call("alert", JSON.encode(rgo));

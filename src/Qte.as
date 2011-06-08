@@ -23,6 +23,10 @@ package
 				return -1;
 			return 1;
 		}
+		public function secTimeout():Number 
+		{
+			return secTrigger + 1.0;
+		}
 		public function ToJson():Object
 		{
 			var jsonRgpoint:Array = [];

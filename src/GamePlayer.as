@@ -28,6 +28,7 @@ package
 			
 			addEventListener(MouseEvent.CLICK, onClick);
 			videotube.addEventListener(EventQte.QTE, onQte);
+			videotube.addEventListener(EventQte.QTE_TIMEOUT, onTimeout);
 		}
 		private function cleanup(e:Event):void
 		{
@@ -36,13 +37,27 @@ package
 			videotube.removeEventListener(EventQte.QTE, onQte);
 		}
 		private function onQte(e:EventQte):void
-		{
+		{			
+			clearClickarea();
 			clickarea = new ClickArea(e.qte.rgpoint, 0xffff00, 0.7);
 			addChild(clickarea);
+		}
+		private function onTimeout(e:EventQte):void
+		{
+			if (clickarea != null)
+			{
+				// fail
+			}
+			clearClickarea();
 		}
 		private function onClick(mouse:MouseEvent):void
 		{
 			if (clickarea != null && clickarea.FHit(new Point(mouse.stageX, mouse.stageY)))
+				clearClickarea();
+		}
+		private function clearClickarea():void
+		{
+			if (clickarea != null)
 			{
 				removeChild(clickarea);
 				clickarea = null;
