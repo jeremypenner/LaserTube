@@ -13,6 +13,7 @@ package
 		private var videotube:Videotube;
 		private var gamedisc:Gamedisc;
 		private var sketchShape:SketchShape;
+		private var clickarea:ClickArea;
 		
 		public function GameEditor(videotube:Videotube, gamedisc:Gamedisc) 
 		{
@@ -30,6 +31,10 @@ package
 			addChild(sketchShape);
 			sketchShape.addEventListener(SketchShape.DRAW_BEGIN, onDrawBegin);
 			sketchShape.addEventListener(SketchShape.DRAW_END, onDrawEnd);
+			
+			clickarea = null;
+			videotube.addEventListener(EventQte.QTE, onQteBegin);
+			videotube.addEventListener(EventQte.QTE_TIMEOUT, onQteEnd);
 		}
 		public function cleanup(e: Event):void
 		{
@@ -37,6 +42,16 @@ package
 			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			sketchShape.removeEventListener(SketchShape.DRAW_BEGIN, onDrawBegin);
 			sketchShape.removeEventListener(SketchShape.DRAW_END, onDrawEnd);
+		}
+		public function onQteBegin(e: EventQte):void
+		{
+			clickarea = new ClickArea(e.qte.rgpoint, 0x4444ee, 0.4);
+			addChild(clickarea);
+		}
+		public function onQteEnd(e: EventQte):void
+		{
+			removeChild(clickarea);
+			clickarea = null;
 		}
 		public function onKeyUp(key: KeyboardEvent):void
 		{
