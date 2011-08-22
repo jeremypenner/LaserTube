@@ -5,6 +5,10 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.text.StyleSheet;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	/**
 	 * ...
 	 * @author jjp
@@ -14,11 +18,14 @@ package
 		private var videotube:Videotube;
 		private var gamedisc:Gamedisc;
 		private var clickarea:ClickArea;
+		private var textDeath:TextField;
+		
 		public function GamePlayer(videotube:Videotube, gamedisc:Gamedisc) 
 		{
 			this.videotube = videotube;
 			this.gamedisc = gamedisc;
 			clickarea = null;
+			textDeath = null;
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		private function init(e:Event):void
@@ -37,7 +44,7 @@ package
 			videotube.removeEventListener(EventQte.QTE, onQte);
 		}
 		private function onQte(e:EventQte):void
-		{			
+		{
 			clearClickarea();
 			clickarea = new ClickArea(e.qte.rgpoint, 0xffff00, 0.7);
 			addChild(clickarea);
@@ -46,7 +53,16 @@ package
 		{
 			if (clickarea != null)
 			{
-				// fail
+				videotube.pause();
+				textDeath = new TextField();
+				textDeath.htmlText = "<p align='center'>YOU ARE DEAD</p>";
+				textDeath.wordWrap = true;
+				textDeath.background = true;
+				textDeath.backgroundColor = 0x0000FF;
+				textDeath.width = stage.stageWidth;
+				textDeath.height = stage.stageHeight;
+				textDeath.setTextFormat(new TextFormat(null, 164, 0xFF0000));
+				addChild(textDeath);
 			}
 			clearClickarea();
 		}
