@@ -3,6 +3,7 @@ package
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.text.StyleSheet;
@@ -13,56 +14,45 @@ package
 	 * ...
 	 * @author jjp
 	 */
-	public class GamePlayer extends Sprite
+	public class GamePlayer extends Game
 	{
-		private var videotube:Videotube;
-		private var gamedisc:Gamedisc;
-		private var clickarea:ClickArea;
-		private var textDeath:TextField;
-		
-		public function GamePlayer(videotube:Videotube, gamedisc:Gamedisc) 
-		{
-			this.videotube = videotube;
-			this.gamedisc = gamedisc;
-			clickarea = null;
-			textDeath = null;
-			addEventListener(Event.ADDED_TO_STAGE, init);
+		private var fAlive: Boolean;
+		public override function GamePlayer(videotube:Videotube, gamedisc:Gamedisc) {
+			super(videotube, gamedisc);
+			fAlive = true;
 		}
-		private function init(e:Event):void
+		protected override function onResume():void
 		{
-			removeEventListener(Event.ADDED_TO_STAGE, init);
-			addEventListener(Event.REMOVED_FROM_STAGE, cleanup);
-			
+			super.onResume();
 			addEventListener(MouseEvent.CLICK, onClick);
 			videotube.addEventListener(EventQte.QTE, onQte);
 			videotube.addEventListener(EventQte.QTE_TIMEOUT, onTimeout);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKey);
 		}
-		private function cleanup(e:Event):void
+		protected override function onPause():void
 		{
-			removeEventListener(Event.REMOVED_FROM_STAGE, cleanup);
+			super.onPause();
 			removeEventListener(MouseEvent.CLICK, onClick);
 			videotube.removeEventListener(EventQte.QTE, onQte);
+			videotube.removeEventListener(EventQte.QTE_TIMEOUT, onTimeout);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKey);
+		}
+		protected override function fPlaying():Boolean {
+			return fAlive;
 		}
 		private function onQte(e:EventQte):void
 		{
+			trace(e.qte.secTrigger() + "gameplayer start" + e.qte.secTimeout());
 			clearClickarea();
-			clickarea = new ClickArea(e.qte.rgpoint, 0xffff00, 0.7);
+			clickarea = new ClickArea(e.qte.center, e.qte.radius, 0x4444ee, 0.4);
 			addChild(clickarea);
 		}
 		private function onTimeout(e:EventQte):void
 		{
-			if (clickarea != null)
-			{
-				videotube.pause();
-				textDeath = new TextField();
-				textDeath.htmlText = "<p align='center'>YOU ARE DEAD</p>";
-				textDeath.wordWrap = true;
-				textDeath.background = true;
-				textDeath.backgroundColor = 0x0000FF;
-				textDeath.width = stage.stageWidth;
-				textDeath.height = stage.stageHeight;
-				textDeath.setTextFormat(new TextFormat(null, 164, 0xFF0000));
-				addChild(textDeath);
+			trace("gameplayer timeout");
+			if (clickarea != null) {
+				pushText("OH SHIT\n\nhit R to restart", 0x0000FF, 0xFF0000);
+				fAlive = false;
 			}
 			clearClickarea();
 		}
@@ -71,13 +61,14 @@ package
 			if (clickarea != null && clickarea.FHit(new Point(mouse.stageX, mouse.stageY)))
 				clearClickarea();
 		}
-		private function clearClickarea():void
-		{
-			if (clickarea != null)
-			{
-				removeChild(clickarea);
-				clickarea = null;
+		private function onKey(event:KeyboardEvent):void {
+			if (!fAlive && event.keyCode == 82) {
+				fAlive = true;
+				popText();
+				videotube.seek(0);
+				videotube.resume();
 			}
+			trace("key:", event.keyCode);
 		}
 	}
 

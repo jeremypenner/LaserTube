@@ -13,38 +13,26 @@ package
 		private var shape:Shape;
 		private var shapeHidden:Shape;
 		private var fHidden:Boolean;
-		public function ClickArea(rgpoint: Array, color:uint, alpha:Number = 1)
+		public function ClickArea(center: Point, radius:Number, color:uint, alpha:Number = 1)
 		{
 			super();
-			shape = drawShape(new Shape(), rgpoint, color, null, alpha);
-			shapeHidden = drawShape(new Shape(), rgpoint, color, null, 0);
+			shape = drawShape(new Shape(), new Point(0,0), radius, color, null, alpha);
+			shapeHidden = drawShape(new Shape(), new Point(0,0), radius, color, null, 0);
 			fHidden = false;
+			moveTo(center);
 			addChild(shape);
 		}
-		public static function drawShape(shape:Shape, rgpoint:Array, color:uint, colorLine:* = null, alpha:Number = 1):Shape
+		public function moveTo(centerNew: Point):void
+		{
+			x = centerNew.x;
+			y = centerNew.y;
+		}
+		public static function drawShape(shape:Shape, center:Point, radius:Number, color:uint, colorLine:* = null, alpha:Number = 1):Shape
 		{
 			shape.graphics.clear();
-			if (rgpoint.length > 0)
-			{
-				if (colorLine != null)
-					shape.graphics.lineStyle(1, colorLine);
-				shape.graphics.beginFill(color, alpha);
-				var fFirstPoint:Boolean = true;
-				for each (var point:Point in rgpoint)
-				{
-					if (fFirstPoint)
-					{
-						shape.graphics.moveTo(point.x, point.y);
-						fFirstPoint = false;
-					}
-					else
-					{
-						shape.graphics.lineTo(point.x, point.y);
-					}
-				}
-				shape.graphics.lineTo(rgpoint[0].x, rgpoint[0].y);
-				shape.graphics.endFill();
-			}
+			shape.graphics.beginFill(color, alpha);
+			shape.graphics.drawCircle(center.x, center.y, radius);
+			shape.graphics.endFill();
 			return shape;
 		}
 		public function Show():void

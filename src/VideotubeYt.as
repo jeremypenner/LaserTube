@@ -16,6 +16,7 @@ package
 		{
 			super(gamedisc);
 			Security.allowDomain("www.youtube.com");
+			Security.allowDomain("*.ytimage.com");
 			player = null;
 			loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.INIT, onLoaderInit);
@@ -23,12 +24,23 @@ package
 		}
 		private function onLoaderInit(event:Event):void 
 		{
+			trace("yt: loader init");
 			addChild(loader);
 			loader.contentLoaderInfo.removeEventListener(Event.INIT, onLoaderInit);
-			loader.content.addEventListener("onReady", onPlayerReady);
+			player = loader.content;
+			player.addEventListener("onReady", onPlayerReady);
+			player.addEventListener("onStateChange", onStateChange);
+			player.addEventListener("onError", onError);
+		}
+		private function onStateChange(event:Event):void {
+			trace("yt: state " + player.getPlayerState());
+		}
+		private function onError(event:Event):void {
+			trace("yt: error", Object(event).data);
 		}
 		private function onPlayerReady(event:Event):void 
 		{
+			trace("yt: player ready");
 			player = loader.content;
 			player.setSize(stage.stageWidth, stage.stageHeight);
 			player.cueVideoById(gamedisc.urlVideo);
@@ -36,11 +48,11 @@ package
 			stage.addEventListener(Event.ENTER_FRAME, tick);
 			dispatchEvent(new Event(Videotube.READY));
 		}
-		public override function fready():Boolean 		{ return player !== null; }
-		public override function play():void 			{ player.playVideo(); }
+		public override function fready():Boolean 		{ return player !== null && player.getPlayerState() >= 0; }
+		public override function enqueue():void 		{ seek(0); }
 		public override function pause():void 			{ player.pauseVideo(); }
 		public override function resume():void 			{ player.playVideo(); }
 		public override function time():Number 			{ return player.getCurrentTime(); }
-		public override function seek(sec:Number):void 	{ player.seekTo(sec, true); }
+		protected override function seekI(sec:Number):void 	{ player.seekTo(sec, true); }
 	}
 }

@@ -38,11 +38,15 @@ package
 			removeEventListener(Event.REMOVED_FROM_STAGE, cleanup);
 			stage.removeEventListener(Event.ENTER_FRAME, tick);
 		}
-		public override function fready():Boolean			{ return true; }
-		public override function play():void 			{ stream.play(gamedisc.urlVideo); }
+		public override function fready():Boolean		{ return true; }
 		public override function pause():void 			{ stream.pause(); }
 		public override function resume():void 			{ stream.resume(); }
 		public override function time():Number 			{ return stream.time; }
-		public override function seek(sec:Number):void 	{ stream.seek(sec); }
+		protected override function seekI(sec:Number):void 	{ stream.seek(sec); }
+		public override function enqueue():void {
+			seek(0);
+			stream.play(gamedisc.urlVideo); 
+			stream.pause();
+		}
 	}
 }
