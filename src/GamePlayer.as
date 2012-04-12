@@ -52,6 +52,7 @@ package
 			trace("gameplayer timeout");
 			if (clickarea != null) {
 				pushText("OH SHIT\n\nhit R to restart", 0x0000FF, 0xFF0000);
+				videotube.pause();
 				fAlive = false;
 			}
 			clearClickarea();
