@@ -7,16 +7,12 @@ package
 	 */
 	public class Qte
 	{
-		public var center:Point;
-		public var radius:Number;
 		public var msTrigger:int;
 		public var msTimeout:int;
 		public var fDirty:Boolean;
 		
-		public function Qte(center: Point = null, radius: Number = -1, secTrigger:Number = -1, secTimeout:Number = -1, fDirty: Boolean = false) 
+		public function Qte(secTrigger:Number = -1, secTimeout:Number = -1, fDirty: Boolean = false) 
 		{
-			this.center = center;
-			this.radius = radius;
 			if (secTrigger >= 0)
 				this.msTrigger = int(secTrigger * 1000);
 			else
@@ -32,11 +28,7 @@ package
 			}
 			this.fDirty = fDirty;
 		}
-		public function moveTo(center: Point): void
-		{
-			fDirty = true;
-			this.center = center;
-		}
+
 		public static function compare(qte1:Qte, qte2:Qte):int
 		{
 			if (qte1.msTrigger == qte2.msTrigger)
@@ -51,18 +43,31 @@ package
 		}
 		public function secTimeout():Number 
 		{
-			return secTrigger() + 1.0;
+			return msTimeout / 1000.0;
 		}
+		protected function shapeToJson():Object {
+			return null;
+		}
+		protected function setShapeFromJson(shape:Object):void {}
 		public function ToJson():Object
 		{
-			return { shape: {center: [center.x, center.y], radius: radius}, ms_trigger: msTrigger, ms_finish: msTimeout };
+			return { shape: this.shapeToJson(), ms_trigger: msTrigger, ms_finish: msTimeout };
 		}
-		public function FromJson(json:Object):void
+		public static function FromJson(json:Object):Qte
 		{
-			center = new Point(json.shape.center[0], json.shape.center[1]);
-			radius = json.shape.radius;
-			msTrigger = json.ms_trigger;
-			msTimeout = json.ms_finish;
+			var qte:Qte;
+			if (json.shape.radius) 
+				qte = new QteCircle();
+			else if (json.shape.text)
+				qte = new QteText();
+			else
+				return null;
+				
+			qte.setShapeFromJson(json.shape);
+			qte.msTrigger = json.ms_trigger;
+			qte.msTimeout = json.ms_finish;
+			
+			return qte;
 		}
 	}
 }

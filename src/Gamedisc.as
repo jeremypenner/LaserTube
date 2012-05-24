@@ -161,9 +161,9 @@ package
 			rgqte = [];
 			for each (var jsonQte:Object in json.qtes)
 			{
-				var qte:Qte = new Qte();
-				qte.FromJson(jsonQte);
-				rgqte.push(qte);
+				var qte:Qte = Qte.FromJson(jsonQte);
+				if (qte)
+					rgqte.push(qte);
 			}
 			urlVideo = json.url;
 			typeVideotube = json.ktube;

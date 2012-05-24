@@ -17,6 +17,11 @@ package
 			super(type);
 			this.qte = qte;
 		}
+		public function qteCircle():QteCircle {
+			return qte as QteCircle;
+		}
+		public function qteText():QteText {
+			return qte as QteText;
+		}
 	}
-
 }
